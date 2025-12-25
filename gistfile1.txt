@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# ================= COLORS =================
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+PURPLE="\e[35m"
+WHITE="\e[97m"
+RESET="\e[0m"
+BOLD="\e[1m"
+
+PASS="sparker@spark.com"
+
+# ================= LOADING =================
+loading() {
+    echo -ne "${CYAN}Loading"
+    for i in {1..5}; do
+        echo -ne "."
+        sleep 0.3
+    done
+    echo -e "${RESET}"
+}
+
+# ================= LOGIN =================
+clear
+echo -e "${CYAN}"
+echo "███████╗██████╗  █████╗ ██████╗ ██╗  ██╗"
+echo "██╔════╝██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝"
+echo "███████╗██████╔╝███████║██████╔╝█████╔╝ "
+echo "╚════██║██╔═══╝ ██╔══██║██╔═══╝ ██╔═██╗ "
+echo "███████║██║     ██║  ██║██║     ██║  ██╗"
+echo "╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝"
+echo -e "${YELLOW}              S P A R K"
+echo -e "${CYAN}        Powered by GAMERBOY_L × NIGHT"
+echo -e "${RESET}"
+
+read -p "Username: " user
+read -s -p "Password: " pass
+echo
+
+if [[ "$pass" != "$PASS" ]]; then
+    echo -e "${RED}Access Denied!${RESET}"
+    exit 1
+fi
+
+echo -e "${GREEN}Login Successful!${RESET}"
+sleep 1
+clear
+
+# ================= MAIN BANNER =================
+loading
+clear
+echo -e "${PURPLE}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "███████╗██████╗  █████╗ ██████╗ ██╗  ██╗"
+echo "██╔════╝██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝"
+echo "███████╗██████╔╝███████║██████╔╝█████╔╝ "
+echo "╚════██║██╔═══╝ ██╔══██║██╔═══╝ ██╔═██╗ "
+echo "███████║██║     ██║  ██║██║     ██║  ██╗"
+echo "╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝" 
+echo -e "${YELLOW}               S P A R K"
+echo -e "${CYAN}        GAMERBOY_L × NIGHT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -e "${RESET}"
+
+# ================= MENU =================
+echo -e "${BOLD}${GREEN}               [ GAMERBOY_L ]${RESET}"
+echo -e "${BLUE}------------------------------------------------"
+echo -e "${YELLOW}1${RESET} ➤ iDX 24/7 Installer (GAMERBOY_L)"
+echo -e "${YELLOW}2${RESET} ➤ Pterodactyl Panel Addons (NIGHT)"
+echo -e "${YELLOW}3${RESET} ➤ VM Manager (NIGHT)"
+echo -e "${YELLOW}4${RESET} ➤ VPS Optimizer (NIGHT)"
+echo -e "${YELLOW}5${RESET} ➤ Proxmox VE (NIGHT)"
+echo -e "${YELLOW}6${RESET} ➤ Root Access Tool (NIGHT)"
+echo -e "${YELLOW}7${RESET} ➤ IPv4 / Tailscale (NIGHT)"
+echo -e "${YELLOW}8${RESET} ➤ Fastfetch (NIGHT)"
+echo -e "${RED}0${RESET} ➤ Exit"
+echo -e "${BLUE}------------------------------------------------${RESET}"
+
+read -p "Select Option ➜ " opt
+
+case $opt in
+1) bash <(curl -s https://gist.githubusercontent.com/fahmibinamin/b7857ee44b98b622a51f2213921cecaa/raw/dda8a2f2db0b13b57eae072807b0031edc1236be/gistfile1.txt);;
+2) git clone https://github.com/rredefined/ptero.git && cd ptero && mv * /var/www/pterodactyl && cd && blueprint -i *.blueprint;;
+3) bash <(curl -s https://raw.githubusercontent.com/rredefined/Vm-Manager/main/vm.sh);;
+4) bash <(curl -s https://raw.githubusercontent.com/rredefined/debian11-vps-optimizer/main/vps-optimizer-debian11.sh);;
+5) wget -O proxmox.sh https://raw.githubusercontent.com/ma6z/Proxmox-Installer/main/proxmox.sh && bash proxmox.sh;;
+6) apt install git -y && git clone https://github.com/rredefined/NighT-ssh.git && cd NighT-ssh && chmod +x init-ssh.sh && ./init-ssh.sh;;
+7) curl -fsSL https://tailscale.com/install.sh | sh && tailscale up;;
+8) bash <(curl -s https://raw.githubusercontent.com/rredefined/Vm-Manager/main/updated-fastfetch.sh);;
+0) exit ;;
+*) echo -e "${RED}Invalid Option!${RESET}" ;;
+esac
