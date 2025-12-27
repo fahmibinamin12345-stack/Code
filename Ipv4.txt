@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# ================= COLORS =================
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+RESET="\e[0m"
+BOLD="\e[1m"
+
+clear
+
+echo -e "${CYAN}${BOLD}"
+echo "======================================="
+echo "      INSTALLING IPV4 (TAILSCALE)       "
+echo "======================================="
+echo -e "${RESET}"
+
+# Check root
+if [ "$EUID" -ne 0 ]; then
+  echo -e "${RED}❌ Please run as root (sudo)${RESET}"
+  exit 1
+fi
+
+echo -e "${BLUE}▶ Installing Tailscale...${RESET}"
+curl -fsSL https://tailscale.com/install.sh | sh
+
+echo -e "${GREEN}✔ Installation completed${RESET}"
+
+echo -e "${BLUE}▶ Checking system type...${RESET}"
+
+if command -v systemctl &>/dev/null; then
+    echo -e "${GREEN}✔ systemd detected${RESET}"
+    echo -e "${BLUE}▶ Starting tailscaled...${RESET}"
+    systemctl start tailscaled
+    systemctl enable tailscaled
+else
+    echo -e "${YELLOW}⚠ systemd not found (container detected)${RESET}"
+    echo -e "${YELLOW}⚠ tailscaled must be run manually${RESET}"
+fi
+
+echo -e "${BLUE}▶ Running: tailscale up${RESET}"
+tailscale up || echo -e "${RED}❌ Failed to start tailscale${RESET}"
+
+echo -e "${GREEN}"
+echo "======================================="
+echo "   ✔ TAILSCALE SETUP FINISHED"
+echo "======================================="
+echo -e "${RESET}"
