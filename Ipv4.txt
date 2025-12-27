@@ -17,19 +17,23 @@ echo "      INSTALLING IPV4 (TAILSCALE)       "
 echo "======================================="
 echo -e "${RESET}"
 
-# Check root
+# -------- Check root --------
 if [ "$EUID" -ne 0 ]; then
   echo -e "${RED}❌ Please run as root (sudo)${RESET}"
   exit 1
 fi
 
+# -------- Install Tailscale --------
 echo -e "${BLUE}▶ Installing Tailscale...${RESET}"
-curl -fsSL https://tailscale.com/install.sh | sh
+if curl -fsSL https://tailscale.com/install.sh | sh; then
+    echo -e "${GREEN}✔ Installation completed${RESET}"
+else
+    echo -e "${RED}❌ Failed to install Tailscale${RESET}"
+    exit 1
+fi
 
-echo -e "${GREEN}✔ Installation completed${RESET}"
-
+# -------- Check system type --------
 echo -e "${BLUE}▶ Checking system type...${RESET}"
-
 if command -v systemctl &>/dev/null; then
     echo -e "${GREEN}✔ systemd detected${RESET}"
     echo -e "${BLUE}▶ Starting tailscaled...${RESET}"
@@ -37,11 +41,17 @@ if command -v systemctl &>/dev/null; then
     systemctl enable tailscaled
 else
     echo -e "${YELLOW}⚠ systemd not found (container detected)${RESET}"
-    echo -e "${YELLOW}⚠ tailscaled must be run manually${RESET}"
+    echo -e "${YELLOW}⚠ You need to run tailscaled manually${RESET}"
 fi
 
+# -------- Run tailscale up --------
 echo -e "${BLUE}▶ Running: tailscale up${RESET}"
-tailscale up || echo -e "${RED}❌ Failed to start tailscale${RESET}"
+if tailscale up; then
+    echo -e "${GREEN}✔ Tailscale is up and running${RESET}"
+else
+    echo -e "${RED}❌ Failed to run 'tailscale up'${RESET}"
+    echo -e "${YELLOW}⚠ If you are in a container (Docker / Codespace), this will fail${RESET}"
+fi
 
 echo -e "${GREEN}"
 echo "======================================="
